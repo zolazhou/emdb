@@ -140,29 +140,40 @@ del(Txn, DB, Key, Value) ->
     apply_with_receivor(del, [Txn, DB, Key, Value]).
 
 
+-spec cursor_open(txn_ref(), db_ref()) -> {ok, cursor_ref()} | {error, any()}.
 cursor_open(Txn, DB) ->
     apply_with_receivor(cursor_open, [Txn, DB]).
 
+-spec cursor_close(cursor_ref()) -> ok | {error, any()}.
 cursor_close(Cursor) ->
     apply_with_receivor(cursor_close, [Cursor]).
 
+-spec cursor_get(cursor_ref(), cursor_op()) ->
+    {ok, {binary(), binary()}} | ok | {error, any()}.
 cursor_get(Cursor, Op) when is_atom(Op) ->
     cursor_get(Cursor, undefined, undefined, Op).
 
+-spec cursor_get(cursor_ref(), binary(), binary(), cursor_op()) ->
+    {ok, {binary(), binary()}} | ok | {error, any()}.
 cursor_get(Cursor, Key, Val, Op) when is_atom(Op) ->
     OpCode = atom_to_opcode(Op),
     apply_with_receivor(cursor_get, [Cursor, Key, Val, OpCode]).
 
+-spec cursor_put(cursor_ref(), binary(), binary()) -> ok | {error, any()}.
 cursor_put(Cursor, Key, Val) ->
     cursor_put(Cursor, Key, Val, []).
 
+-spec cursor_put(cursor_ref(), binary(), binary(), put_options()) ->
+    ok | {error, any()}.
 cursor_put(Cursor, Key, Val, Opts) ->
     Flags = parse_put_flags(Opts),
     apply_with_receivor(cursor_put, [Cursor, Key, Val, Flags]).
 
+-spec cursor_del(cursor_ref()) -> ok | {error, any()}.
 cursor_del(Cursor) ->
     cursor_del(Cursor, []).
 
+-spec cursor_del(cursor_ref(), del_options()) -> ok | {error, any()}.
 cursor_del(Cursor, Opts) ->
     Flags = parse_cursor_del_flags(Opts),
     apply_with_receivor(cursor_del, [Cursor, Flags]).

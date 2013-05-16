@@ -92,3 +92,4 @@
                         append_dup |
                         multiple].
 
+-type del_options() :: [no_dup_data].
